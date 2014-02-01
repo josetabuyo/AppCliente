@@ -21,8 +21,24 @@
 		</form>
 	</body>
 	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	
 	<script type="text/javascript">
-		alert('hols');
+		$(function(){
+			alert('holis');
+			
+			//TO DO:
+			//	$.ajax a 
+			$.ajax({
+				url: "http://appservidor.herokuapp.com/login"
+			})
+			.done(function( data ) {
+				console.log( "Sample of data:", data);
+			});
+			
+			
+		});
 	</script>
 	
 </html>
