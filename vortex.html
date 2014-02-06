@@ -1,0 +1,81 @@
+<html>
+	<head>
+		<title>Login</title>
+		<style type="text/css">
+			
+		</style>
+	</head>
+	<body>
+		<h1>Vortex</h1>
+		
+		<button type="button" id="btnEnviar"> Envíe <button>
+		
+	</body>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	
+	
+	<script type="text/javascript" src="http://jlurgo.github.io/VortexJS/FiltrosYTransformaciones.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoClienteHTTP.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/ClonadorDeObjetos.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/GeneradorDeIdMensaje.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoClienteHTTP.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoPortalBidi.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoPortalBidiMonoFiltro.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoRouter.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/PataConectora.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoConectorSocket.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/socket.io.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoConectorBluetooth.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoAdaptadorBluetoothArduino.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/Vortex.js"></script>
+	
+	
+	<script type="text/javascript">
+		$(function(){
+			
+			vx.start({verbose:true});
+
+			//    vx.conectarPorHTTP({
+			//        url:'http://router-vortex.herokuapp.com',
+			//        intervalo_polling: 200
+			//    });    
+
+			vx.conectarPorWebSockets({
+				url:'https://router-vortex.herokuapp.com'
+			});
+			
+			/*
+			vx.conectarPorBluetoothConArduino({
+				mac: '20:13:06:14:05:97',
+				alConectar:function(){
+					_this.txt_status.text('conectado a 20:13:06:14:05:97');
+				},
+				onErrorAlConectar:function(){
+					_this.txt_status.text('error al conectar a 20:13:06:14:05:97');
+				}
+			})
+			*/
+			
+			vx.enviarMensaje({
+				tipoDeMensaje: 'mensaje_test',
+				dato1: 'uhuhuhuhuhu',
+				dato2: 'aaaaahhhhhhhh'
+            });
+			
+			
+			vx.pedirMensajes({
+				filtro: new FiltroXEjemplo({
+					tipoDeMensaje: 'mensaje_test'
+				}),
+				callback: function(mensaje){
+					console.log('mensaje......', mensaje);
+				}
+			});   
+			
+			
+		});
+	</script>
+	
+</html>
