@@ -8,7 +8,7 @@
 	<body>
 		<h1>Vortex</h1>
 		
-		<button type="button" id="btnEnviar"> Envíe <button>
+		<button type="button" id="btnEnviar"> Enviar </button>
 		
 	</body>
 	
@@ -58,11 +58,13 @@
 			})
 			*/
 			
-			vx.enviarMensaje({
-				tipoDeMensaje: 'mensaje_test',
-				dato1: 'uhuhuhuhuhu',
-				dato2: 'aaaaahhhhhhhh'
-            });
+			$('#btnEnviar').on('click', function(event){
+				vx.enviarMensaje({
+					tipoDeMensaje: 'mensaje_test',
+					dato1: 'uhuhuhuhuhu',
+					dato2: 'aaaaahhhhhhhh'
+				});
+			});
 			
 			
 			vx.pedirMensajes({
