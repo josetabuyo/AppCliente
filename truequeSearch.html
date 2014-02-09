@@ -1,36 +1,88 @@
 <html>
 	<head>
-		<title>Login</title>
+		<title>Trueque</title>
 		<style type="text/css">
+			/*estilos que no viajan*/
+			.semilla{
+				position:absolute;
+				top: 100px,
+				bottom: 10px
+				left: 5px,
+				rigth: 2px,
+				border: solid 1px rgb(0,0,0);
+			}
+			.usuario{
+				position:absolute;
+				top: 0px;
+				left: 0px;
+				width: 100px;
+				bottom: 0px;
+				border: solid 1px rgb(0,0,0);
+			}
+			
+			.datos{
+				position:absolute;
+				left: 0px;
+				rigth: 0px;
+				bottom: 0px;
+				border: solid 1px rgb(0,0,0);
+			}
+			
+			
+			.contenedorProductos{
+				position:absolute;
+				left: 110px;
+				rigth: 0px;
+				top:0px
+				bottom: 0px;
+				border: solid 1px rgb(0,0,0);
+			}
+			
+			.producto{
+				display: inline;
+				width: 100px;
+				height: 100px;
+				border: solid 1px rgb(0,0,0);
+			}
+			
+			
 			
 		</style>
 	</head>
 	<body>
-		<h1>Vortex</h1>
-		
-		<button id="btnEnviar" type="button"> Enviar </button>
-		<div id="data"></div>
-		
-		instala el cliente.
-			ofrece tus productos
-		avisale a un amigo.
-			hasta 5 amigos (o lo que de el host gratuito en el que arranquemos)
-			si queres más invitaciones, monta un server 
-				lenguauje1
-				lenguauje2
-				lenguauje3
-			ventajas de montar un server? base de datos local¿?
-		
-		
-			
-			
-		
-		
-				
-			
-		
-		
-		
+		<h1>Trueque</h1>
+		<h2>B&uacute;squeda</h2>
+		<button id="buscar">Buscar<button>
+		<table id="ParametrosBusqueda">
+			<tr id="ServerComunidad">
+				<td>
+					<label class="clave" >Server</label>:
+				</td>
+				<td>
+					<input class="valor" type="text" />
+				</td>
+			</tr>
+			<tr id="Producto">
+				<td>
+					<label class="clave" >Producto</label>:
+				</td>
+				<td>
+					<input class="valor" type="text" />
+				</td>
+			</tr>
+			<tr id="Usuario">
+				<td>
+					<label class="clave" >Usuario</label>:
+				</td>
+				<td>
+					<input class="valor" type="text" />
+				</td>
+			</tr>
+		</table>
+		<div id="resultados">
+			<ul>
+			</ul>
+		</div>
 		
 	</body>
 	
@@ -53,52 +105,43 @@
     <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoAdaptadorBluetoothArduino.js"></script>
     <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/Vortex.js"></script>
 	
-	
 	<script type="text/javascript">
 		$(function(){
 			
+			var usuarioLocal = 'JuanCarlosBaute';
+			
+			
 			vx.start({verbose:true});
-
-			//    vx.conectarPorHTTP({
-			//        url:'http://router-vortex.herokuapp.com',
-			//        intervalo_polling: 200
-			//    });    
-
+			
+			
+			//Comunidad 1
+			vx.conectarPorHTTP({
+				url:'http://router-vortex.herokuapp.com',
+				intervalo_polling: 200
+			});
+			
+			
+			//Comunidad 2
 			vx.conectarPorWebSockets({
 				url:'https://router-vortex.herokuapp.com'
 			});
 			
-			/*
-			vx.conectarPorBluetoothConArduino({
-				mac: '20:13:06:14:05:97',
-				alConectar:function(){
-					_this.txt_status.text('conectado a 20:13:06:14:05:97');
-				},
-				onErrorAlConectar:function(){
-					_this.txt_status.text('error al conectar a 20:13:06:14:05:97');
-				}
-			})
-			*/
 			
-			$('#btnEnviar').on('click', function(event){
-				vx.enviarMensaje({
-					tipoDeMensaje: 'mensaje_test_JT',
-					dato1: 'uhuhuhuhuhu',
-					dato2: 'aaaaahhhhhhhh'
-				});
+			
+			vx.enviarMensaje({
+				usuarioOrigen: usuarioLocal,
+				tipoDeMensaje: 'reqEco'
 			});
-			
 			
 			vx.pedirMensajes({
 				filtro: new FiltroXEjemplo({
-					tipoDeMensaje: 'mensaje_test_JT'
+					usuarioDestino	: usuarioLocal,
+					tipoDeMensaje	: 'resEco'
 				}),
 				callback: function(mensaje){
-					console.log('mensaje......', mensaje);
-					$('#data').text( JSON.stringify(mensaje));
+					$('#resultados ul').append('<li>'+mensaje.data+'</li>');
 				}
-			});   
-			
+			});
 			
 		});
 	</script>

@@ -8,17 +8,18 @@
 	<body>
 		<h1>Login</h1>
 		
+		<ul>
+			<li>
+				Usuario: <input type="text" id="Usuario"/>
+			</li>
+			<li>
+				Password: <input type="password" id="Password"/>
+			</li>
+			<li>
+				<button id="btnLogin">Login</button>
+			</li>
+		</ul>
 		
-		<form action="/login" metod="post">
-			<p>
-				<input type="text" id="Username">
-				</input>
-				<input type="password" id="Password">
-				</input>
-				<input type="submit" value="Login">
-				</input>
-			</p>
-		</form>
 	</body>
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -26,19 +27,23 @@
 	
 	<script type="text/javascript">
 		$(function(){
-			alert('holis');
 			
-			//TO DO:
-			//	$.ajax a 
-			$.ajax({
-				url: "http://appservidor.herokuapp.com/login"
-			})
-			.done(function( data ) {
-				console.log( "Sample of data:", data);
+			//var _url = "http://appservidor.herokuapp.com/login";
+			var _url = "http://localhost:3000/login";
+			
+			$('#btnLogin').on('click', function(){
+				$.ajax({
+					url: _url,
+					type: "POST",
+					data: {
+						Usuario: $('#Usuario').val(),
+						Password: $('#Password').val()
+					}
+				})
+				.done(function( data ) {
+					console.log( "Respuesta del node: ", data);
+				});
 			});
-			
-			
-			
 			
 			
 		});

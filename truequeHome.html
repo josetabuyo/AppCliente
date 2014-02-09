@@ -1,0 +1,220 @@
+<html>
+	<head>
+		<title>Trueque</title>
+		<style type="text/css">
+			/*estilos que no viajan*/
+			.semilla{
+				position:absolute;
+				top: 100px,
+				bottom: 10px
+				left: 5px,
+				rigth: 2px,
+				border: solid 1px rgb(0,0,0);
+			}
+			.usuario{
+				position:absolute;
+				top: 0px;
+				left: 0px;
+				width: 100px;
+				bottom: 0px;
+				border: solid 1px rgb(0,0,0);
+			}
+			
+			.datos{
+				position:absolute;
+				left: 0px;
+				rigth: 0px;
+				bottom: 0px;
+				border: solid 1px rgb(0,0,0);
+			}
+			
+			
+			.contenedorProductos{
+				position:absolute;
+				left: 110px;
+				rigth: 0px;
+				top:0px
+				bottom: 0px;
+				border: solid 1px rgb(0,0,0);
+			}
+			
+			.producto{
+				display: inline;
+				width: 100px;
+				height: 100px;
+				border: solid 1px rgb(0,0,0);
+			}
+			
+			
+			
+		</style>
+	</head>
+	<body>
+		<h1>Trueque</h1>
+		<h2>Mis cositas</h2>
+		<a href="./truequeSearch.html">Trueque Search</a>
+		<div id="semilla">
+			<style type="text/css">
+				/*estilos que viajan*/
+			</style>
+			<div class="usuario" id="JuanCarlosBaute">
+				<img src="http://www.rankingfamosos.com/imagenes/famosos/20110314/carlos-baute-69.jpg"/>
+				<div class="datos">
+					hola soy Juan Carlos Baute
+				</div>
+			</div>
+			<div id="contenedorProductos">
+				<div class="producto" id="PavaElectricaRoja">
+					<img src="http://www.macromercado.com.uy/imagenes/img_contenido/productos/a/jarra-3.jpg"/>
+					<div class="datos">
+						Es una linda Pava Electrica Roja
+					</div>
+				</div>
+				<div class="producto" id="RoperoViejo">
+					<img src="http://2.bp.blogspot.com/-2-TCXjx9Ls4/T10ISmHMCQI/AAAAAAAAAio/4wROF2mxGd8/s400/DSCN1879.JPG"/>
+					<div class="datos">
+						es un ropero viejo y misterioso
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	
+	
+	<script type="text/javascript" src="http://jlurgo.github.io/VortexJS/FiltrosYTransformaciones.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoClienteHTTP.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/ClonadorDeObjetos.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/GeneradorDeIdMensaje.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoClienteHTTP.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoPortalBidi.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoPortalBidiMonoFiltro.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoRouter.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/PataConectora.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoConectorSocket.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/socket.io.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoConectorBluetooth.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoAdaptadorBluetoothArduino.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/Vortex.js"></script>
+	
+	<script type="text/javascript">
+		$(function(){
+			
+			var usuarioLocal = 'JuanCarlosBaute';
+			
+			vx.start({verbose:true});
+
+			//    vx.conectarPorHTTP({
+			//        url:'http://router-vortex.herokuapp.com',
+			//        intervalo_polling: 200
+			//    });
+
+			vx.conectarPorWebSockets({
+				url:'https://router-vortex.herokuapp.com'
+			});
+			
+			
+			vx.pedirMensajes({
+				filtro: new FiltroXEjemplo({
+					tipoDeMensaje	: 'reqEco'
+				}),
+				callback: function(mensaje){
+					
+					vx.enviarMensaje({
+						usuarioOrigen: usuarioLocal,
+						usuarioDestino: mensaje.usuarioOrigen,
+						tipoDeMensaje: 'resEco',
+						data: 'JuanCarlosBaute'
+					});
+					
+				}
+			});
+			
+			
+			vx.pedirMensajes({
+				filtro: new FiltroXEjemplo({
+					usuarioDestino	: usuarioLocal,
+					tipoDeMensaje	: 'reqTienda'
+				}),
+				callback: function(mensaje){
+					
+					vx.enviarMensaje({
+						usuarioOrigen: usuarioLocal,
+						usuarioDestino: mensaje.usuarioOrigen,
+						tipoDeMensaje: 'resTienda',
+						data: $('#semilla').html()
+					});
+					
+				}
+			});
+			
+			
+			vx.pedirMensajes({
+				filtro: new FiltroXEjemplo({
+					usuarioDestino	: usuarioLocal,
+					tipoDeMensaje	: 'reqProducto'
+				}),
+				callback: function(mensaje){
+					
+					vx.enviarMensaje({
+						usuarioOrigen: usuarioLocal,
+						usuarioDestino: mensaje.usuarioOrigen,
+						tipoDeMensaje: 'resTienda',
+						data: $('#semilla').html()
+					});
+					
+				}
+			});
+			
+			
+			
+			
+			
+			var opinionDe = function(opinado){
+				return opinado+' es medio forro';
+			}
+			vx.pedirMensajes({
+				filtro: new FiltroXEjemplo({
+					usuarioDestino	: usuarioLocal,
+					tipoDeMensaje	: 'reqOpinion'
+				}),
+				
+				callback: function(mensaje){
+					
+					var datosOpinado = opinionDe(mensaje.opinado);
+					
+					vx.enviarMensaje({
+						usuarioOrigen: usuarioLocal,
+						usuarioDestino: mensaje.usuarioOrigen,
+						tipoDeMensaje: 'resOpinion',
+						data: datosOpinado
+					});
+				}
+			});
+			
+			
+			/*
+			//var _url = "http://appservidor.herokuapp.com/login";
+			var _url = "http://localhost:3000/login";
+			
+			$('#btnLogin').on('click', function(){
+				$.ajax({
+					url: _url,
+					type: "POST",
+					data: {
+						Usuario: $('#Usuario').val(),
+						Password: $('#Password').val()
+					}
+				})
+				.done(function( data ) {
+					console.log( "Respuesta del node: ", data);
+				});
+			});
+			*/
+			
+		});
+	</script>
+	
+</html>
