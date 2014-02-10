@@ -1,36 +1,62 @@
 <html>
 	<head>
-		<title>Login</title>
-		<style type="text/css">
+		<title>Trueque</title>
+		<style>
+						
+			div{
+				overflow: hidden;
+			}
+			
+			#tienda{
+				position:absolute;
+				top: 10px;
+				left: 500px;
+				bottom: 10px;
+				right: 10px;
+				
+				
+				border: solid 5px rgb(0,0,0);
+			}
 			
 		</style>
 	</head>
 	<body>
-		<h1>Vortex</h1>
+		<h1>Trueque</h1>
+		<h2>B&uacute;squeda</h2>
+		<button id="buscar">Buscar</button>
 		
-		<button id="btnEnviar" type="button"> Enviar </button>
-		<div id="data"></div>
-		
-		instala el cliente.
-			ofrece tus productos
-		avisale a un amigo.
-			hasta 5 amigos (o lo que de el host gratuito en el que arranquemos)
-			si queres más invitaciones, monta un server 
-				lenguauje1
-				lenguauje2
-				lenguauje3
-			ventajas de montar un server? base de datos local¿?
-		
-		
-			
-			
-		
-		
-				
-			
-		
-		
-		
+		<table id="ParametrosBusqueda">
+			<tr id="ServerComunidad">
+				<td>
+					<label class="clave" >Server</label>:
+				</td>
+				<td>
+					<input class="valor" type="text" />
+				</td>
+			</tr>
+			<tr id="Producto">
+				<td>
+					<label class="clave" >Producto</label>:
+				</td>
+				<td>
+					<input class="valor" type="text" />
+				</td>
+			</tr>
+			<tr id="Usuario">
+				<td>
+					<label class="clave" >Usuario</label>:
+				</td>
+				<td>
+					<input class="valor" type="text" />
+				</td>
+			</tr>
+		</table>
+		<div id="socios">
+			<ul>
+			</ul>
+		</div>
+		<div id="tienda">
+		</div>
 		
 	</body>
 	
@@ -53,51 +79,70 @@
     <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoAdaptadorBluetoothArduino.js"></script>
     <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/Vortex.js"></script>
 	
-	
 	<script type="text/javascript">
 		$(function(){
 			
+			var usuarioLocal = 'DonQuinoto';
+			
+			
 			vx.start({verbose:true});
-
-			//    vx.conectarPorHTTP({
-			//        url:'http://router-vortex.herokuapp.com',
-			//        intervalo_polling: 200
-			//    });    
-
+			
+			/*
+			//Comunidad 1
+			vx.conectarPorHTTP({
+				url:'http://router-vortex.herokuapp.com',
+				intervalo_polling: 200
+			});
+			*/
+			
+			//Comunidad 2
 			vx.conectarPorWebSockets({
 				url:'https://router-vortex.herokuapp.com'
 			});
 			
-			/*
-			vx.conectarPorBluetoothConArduino({
-				mac: '20:13:06:14:05:97',
-				alConectar:function(){
-					_this.txt_status.text('conectado a 20:13:06:14:05:97');
-				},
-				onErrorAlConectar:function(){
-					_this.txt_status.text('error al conectar a 20:13:06:14:05:97');
-				}
-			})
-			*/
 			
-			$('#btnEnviar').on('click', function(event){
-				vx.enviarMensaje({
-					tipoDeMensaje: 'mensaje_test_JT',
-					dato1: 'uhuhuhuhuhu',
-					dato2: 'aaaaahhhhhhhh'
-				});
+			
+			vx.enviarMensaje({
+				usuarioOrigen: usuarioLocal,
+				tipoDeMensaje: 'reqEco'
+			});
+			
+			vx.pedirMensajes({
+				filtro: new FiltroXEjemplo({
+					usuarioDestino	: usuarioLocal,
+					tipoDeMensaje	: 'resEco'
+				}),
+				callback: function(mensaje){
+					var $li = $('<li>'+mensaje.data+'</li>');
+					
+					$li.on('click', function(){
+						vx.enviarMensaje({
+							usuarioOrigen: usuarioLocal,
+							usuarioDestino: $(this).text(),
+							tipoDeMensaje: 'reqTienda'
+						});
+						
+						
+						
+					});
+					
+					$('#socios ul').append($li);
+				}
 			});
 			
 			
 			vx.pedirMensajes({
 				filtro: new FiltroXEjemplo({
-					tipoDeMensaje: 'mensaje_test_JT'
+					usuarioDestino	: usuarioLocal,
+					tipoDeMensaje	: 'resTienda'
 				}),
 				callback: function(mensaje){
-					console.log('mensaje......', mensaje);
-					$('#data').text( JSON.stringify(mensaje));
+					console.log(mensaje);
+					$('#tienda').html(mensaje.data);
+					
 				}
-			});   
+			});
+			
 			
 			
 		});
