@@ -1,58 +1,30 @@
 <html>
 	<head>
 		<title>Trueque</title>
-		<style type="text/css">
-			/*estilos que no viajan*/
-			.semilla{
+		<style>
+						
+			div{
+				overflow: hidden;
+			}
+			
+			#tienda{
 				position:absolute;
-				top: 100px,
-				bottom: 10px
-				left: 5px,
-				rigth: 2px,
-				border: solid 1px rgb(0,0,0);
+				top: 10px;
+				left: 500px;
+				bottom: 10px;
+				right: 10px;
+				
+				
+				border: solid 5px rgb(0,0,0);
 			}
-			.usuario{
-				position:absolute;
-				top: 0px;
-				left: 0px;
-				width: 100px;
-				bottom: 0px;
-				border: solid 1px rgb(0,0,0);
-			}
-			
-			.datos{
-				position:absolute;
-				left: 0px;
-				rigth: 0px;
-				bottom: 0px;
-				border: solid 1px rgb(0,0,0);
-			}
-			
-			
-			.contenedorProductos{
-				position:absolute;
-				left: 110px;
-				rigth: 0px;
-				top:0px
-				bottom: 0px;
-				border: solid 1px rgb(0,0,0);
-			}
-			
-			.producto{
-				display: inline;
-				width: 100px;
-				height: 100px;
-				border: solid 1px rgb(0,0,0);
-			}
-			
-			
 			
 		</style>
 	</head>
 	<body>
 		<h1>Trueque</h1>
 		<h2>B&uacute;squeda</h2>
-		<button id="buscar">Buscar<button>
+		<button id="buscar">Buscar</button>
+		
 		<table id="ParametrosBusqueda">
 			<tr id="ServerComunidad">
 				<td>
@@ -79,9 +51,11 @@
 				</td>
 			</tr>
 		</table>
-		<div id="resultados">
+		<div id="socios">
 			<ul>
 			</ul>
+		</div>
+		<div id="tienda">
 		</div>
 		
 	</body>
@@ -108,18 +82,18 @@
 	<script type="text/javascript">
 		$(function(){
 			
-			var usuarioLocal = 'JuanCarlosBaute';
+			var usuarioLocal = 'DonQuinoto';
 			
 			
 			vx.start({verbose:true});
 			
-			
+			/*
 			//Comunidad 1
 			vx.conectarPorHTTP({
 				url:'http://router-vortex.herokuapp.com',
 				intervalo_polling: 200
 			});
-			
+			*/
 			
 			//Comunidad 2
 			vx.conectarPorWebSockets({
@@ -139,9 +113,37 @@
 					tipoDeMensaje	: 'resEco'
 				}),
 				callback: function(mensaje){
-					$('#resultados ul').append('<li>'+mensaje.data+'</li>');
+					var $li = $('<li>'+mensaje.data+'</li>');
+					
+					$li.on('click', function(){
+						vx.enviarMensaje({
+							usuarioOrigen: usuarioLocal,
+							usuarioDestino: $(this).text(),
+							tipoDeMensaje: 'reqTienda'
+						});
+						
+						
+						
+					});
+					
+					$('#socios ul').append($li);
 				}
 			});
+			
+			
+			vx.pedirMensajes({
+				filtro: new FiltroXEjemplo({
+					usuarioDestino	: usuarioLocal,
+					tipoDeMensaje	: 'resTienda'
+				}),
+				callback: function(mensaje){
+					console.log(mensaje);
+					$('#tienda').html(mensaje.data);
+					
+				}
+			});
+			
+			
 			
 		});
 	</script>
