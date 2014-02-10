@@ -1,0 +1,243 @@
+<html>
+	<head>
+		<title>Trueque</title>
+		<style>
+			
+			div{
+				overflow: hidden;
+			}
+			#tienda{
+				position:absolute;
+				top: 10px;
+				left: 200px;
+				bottom: 10px;
+				right: 10px;
+				
+				
+				border: solid 5px rgb(0,0,0);
+			}
+			
+			.oferta{
+				
+				border: solid 1px rgb(0,200,0);
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Trueque</h1>
+		<h2>Mis cositas</h2>
+		<a href="./truequeSearch.html">Trueque Search</a>
+		<div id="tienda">
+			<style>
+			
+			div{
+				overflow: hidden;
+			}
+			
+			.usuario{
+				position:absolute;
+				top: 0px;
+				left: 0px;
+				height: 200px;
+				right: 0px;
+				
+				border: solid 1px rgb(0,0,0);
+			}
+			.usuario img{
+				display: block;
+				width: 200px;
+				height: 200px
+			}
+			
+			.usuario .datos{
+				position:absolute;
+				top: 0px;
+				left: 200px;
+				right: 0px;
+				bottom: 0px;
+				padding: 5px 5px 5px 5px;
+				border: solid 1px rgb(0,0,0);
+			}
+			
+			
+			#contenedorProductos{
+				position:absolute;
+				left: 0px;
+				right: 0px;
+				top:200px;
+				bottom: 0px;
+				padding: 5px 5px 5px 5px;
+				border: solid 3px rgb(0,0,0);
+			}
+			
+			.producto{
+				display: inline-block;
+				width: 200px;
+				height: 250px;
+				border: solid 1px rgb(0,0,0);
+				margin: 5px 5px 5px 5px;
+			}
+			.producto img{
+				width: 150px;
+				height: 150px;
+			}
+		</style>
+			<div class="usuario" id="JuanCarlosBaute">
+				<img src="http://3.bp.blogspot.com/_EbEIPrrCAnI/SICYrNuA1uI/AAAAAAAAAQE/1L2CObR3W7A/s320/PEPINO.jpg"/>
+				<div class="datos">
+					hola soy el Payaso Pepino
+				</div>
+			</div>
+			<div id="contenedorProductos">
+				<div class="producto" id="PavaElectricaRoja">
+					<img src="http://www.macromercado.com.uy/imagenes/img_contenido/productos/a/jarra-3.jpg"/>
+					<div class="datos">
+						Es una linda Pava Electrica Roja
+					</div>
+				</div>
+				<div class="producto" id="RoperoViejo">
+					<img src="http://2.bp.blogspot.com/-2-TCXjx9Ls4/T10ISmHMCQI/AAAAAAAAAio/4wROF2mxGd8/s400/DSCN1879.JPG"/>
+					<div class="datos">
+						es un ropero viejo y misterioso
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	
+	
+	<script type="text/javascript" src="http://jlurgo.github.io/VortexJS/FiltrosYTransformaciones.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoClienteHTTP.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/ClonadorDeObjetos.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/GeneradorDeIdMensaje.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoClienteHTTP.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoPortalBidi.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoPortalBidiMonoFiltro.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoRouter.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/PataConectora.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoConectorSocket.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/socket.io.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoConectorBluetooth.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoAdaptadorBluetoothArduino.js"></script>
+    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/Vortex.js"></script>
+	
+	<script type="text/javascript">
+		$(function(){
+			
+			var usuarioLocal = 'PayasoPepino';
+			
+			vx.start({verbose:true});
+
+			//    vx.conectarPorHTTP({
+			//        url:'http://router-vortex.herokuapp.com',
+			//        intervalo_polling: 200
+			//    });
+
+			vx.conectarPorWebSockets({
+				url:'https://router-vortex.herokuapp.com'
+			});
+			
+			
+			vx.pedirMensajes({
+				filtro: new FiltroXEjemplo({
+					tipoDeMensaje	: 'reqEco'
+				}),
+				callback: function(mensaje){
+					
+					vx.enviarMensaje({
+						usuarioOrigen: usuarioLocal,
+						usuarioDestino: mensaje.usuarioOrigen,
+						tipoDeMensaje: 'resEco',
+						data: usuarioLocal
+					});
+					
+				}
+			});
+			
+			
+			vx.pedirMensajes({
+				filtro: new FiltroXEjemplo({
+					usuarioDestino	: usuarioLocal,
+					tipoDeMensaje	: 'reqTienda'
+				}),
+				callback: function(mensaje){
+					
+					vx.enviarMensaje({
+						usuarioOrigen: usuarioLocal,
+						usuarioDestino: mensaje.usuarioOrigen,
+						tipoDeMensaje: 'resTienda',
+						data: $('#tienda').html()
+					});
+					
+				}
+			});
+			
+			
+			vx.pedirMensajes({
+				filtro: new FiltroXEjemplo({
+					usuarioDestino	: usuarioLocal,
+					tipoDeMensaje	: 'oferta'
+				}),
+				callback: function(mensaje){
+					$('#'+mensaje.producto).append(''
+						+'<div class="oferta">'
+						+'	A cambio de ' + mensaje.porProducto + '<br/>'
+						+'	Al usuario ' + mensaje.usuarioOrigen
+						+'</div>'
+					);
+				}
+			});
+			
+			
+			
+			
+			
+			var opinionDe = function(opinado){
+				return opinado+' es medio forro';
+			}
+			vx.pedirMensajes({
+				filtro: new FiltroXEjemplo({
+					usuarioDestino	: usuarioLocal,
+					tipoDeMensaje	: 'reqOpinion'
+				}),
+				
+				callback: function(mensaje){
+					
+					var datosOpinado = opinionDe(mensaje.opinado);
+					
+					vx.enviarMensaje({
+						usuarioOrigen: usuarioLocal,
+						usuarioDestino: mensaje.usuarioOrigen,
+						tipoDeMensaje: 'resOpinion',
+						data: datosOpinado
+					});
+				}
+			});
+			
+			
+			/*
+			//var _url = "http://appservidor.herokuapp.com/login";
+			var _url = "http://localhost:3000/login";
+			
+			$('#btnLogin').on('click', function(){
+				$.ajax({
+					url: _url,
+					type: "POST",
+					data: {
+						Usuario: $('#Usuario').val(),
+						Password: $('#Password').val()
+					}
+				})
+				.done(function( data ) {
+					console.log( "Respuesta del node: ", data);
+				});
+			});
+			*/
+			
+		});
+	</script>
+	
+</html>
