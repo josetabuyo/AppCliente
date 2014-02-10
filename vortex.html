@@ -12,6 +12,8 @@
 		
 	</body>
 	
+	
+	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 	
@@ -20,7 +22,6 @@
     <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoClienteHTTP.js"></script>
     <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/ClonadorDeObjetos.js"></script>
     <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/GeneradorDeIdMensaje.js"></script>
-    <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoClienteHTTP.js"></script>
     <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoPortalBidi.js"></script>
     <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoPortalBidiMonoFiltro.js"></script>
     <script type="text/javascript" src="http://jlurgo.github.io/VortexJS/NodoRouter.js"></script>
@@ -58,13 +59,6 @@
 			})
 			*/
 			
-			$('#btnEnviar').on('click', function(event){
-				vx.enviarMensaje({
-					tipoDeMensaje: 'mensaje_test',
-					dato1: 'uhuhuhuhuhu',
-					dato2: 'aaaaahhhhhhhh'
-				});
-			});
 			
 			
 			vx.pedirMensajes({
@@ -75,6 +69,23 @@
 					console.log('mensaje......', mensaje);
 				}
 			});   
+			
+			
+			
+			
+			$('#btnEnviar').on('click', function(event){
+				
+				
+				vx.enviarMensaje({
+					tipoDeMensaje: 'mensaje_test',
+					dato1: 'uhuhuhuhuhu',
+					dato2: 'aaaaahhhhhhhh'
+				});
+				
+				
+				
+			});
+			
 			
 			
 		});
